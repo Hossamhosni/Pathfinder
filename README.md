@@ -9,3 +9,4 @@ PathFinder in a Maze Implemented Using the A* Algorithm and SFML For Graphics.
 ## Example
 Here is an Example of The Program after Solving a maze.
 ![Example](./Example.png)
+![Example 2](./Example2.png)
