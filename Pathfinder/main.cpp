@@ -24,11 +24,13 @@ int main() {
 			bool acceptevents = true;
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (event.type == sf::Event::MouseButtonPressed && acceptevents) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
 				sf::Vector2i localPosition = sf::Mouse::getPosition(window);
 				int x = localPosition.x * SIZE / window.getSize().x;
 				int y = localPosition.y * SIZE / window.getSize().y;
-				solver.make_cell_wall(y, x);
+				if (x >= 0 && y >= 0 && x < SIZE && y < SIZE)
+					solver.make_cell_wall(y, x);
 			}
 			if (event.type == sf::Event::KeyPressed && acceptevents) {
 				if (event.key.code == sf::Keyboard::Enter) {

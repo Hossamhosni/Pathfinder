@@ -24,7 +24,7 @@ void AStarSolver::setup() {
 			cell->obstacle = false;
 			cell->sfrect.setSize(sf::Vector2f(WIN_SIZE/SIZE, WIN_SIZE/SIZE));
 			cell->sfrect.setOutlineThickness(1);
-			cell->sfrect.setOutlineColor(sf::Color::Magenta);
+			cell->sfrect.setOutlineColor(sf::Color::Color(33, 33, 33));
 			cell->sfrect.setPosition(row * WIN_SIZE / SIZE, col * WIN_SIZE / SIZE);
 		}
 	}
@@ -142,7 +142,7 @@ void AStarSolver::print_path() {
 	cout << "The Path is \n";
 	for (auto i = path.begin(); i != path.end(); i++) {
 		cout << "(" << (*i)->i << ", " << (*i)->j <<" H = " << (*i)->h << " - F = " << (*i)->f << ")" << endl;
-		(*i)->sfrect.setFillColor(sf::Color::Green);
+		(*i)->sfrect.setFillColor(sf::Color::Color(106, 153, 164));
 	}
 }
 

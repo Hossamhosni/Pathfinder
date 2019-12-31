@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 #include <SFML/Graphics.hpp>
-#define SIZE 15
+#define SIZE 50
 using std::vector;
 using std::pair;
 using std::map;
