@@ -20,7 +20,9 @@ struct Cell {
 
 	bool operator < (const Cell& cell) const
 	{
-		return (f < cell.f);
+		if (f < cell.f) return true;
+		else if (f == cell.f && i < cell.i) return true;
+		else if (f == cell.f && j < cell.j) return true;
 	}
 };
 class AStarSolver {
@@ -44,6 +46,5 @@ public:
 	void draw_grid(sf::RenderWindow*);
 	void make_cell_wall(int, int);
 	void clear_grid();
-	void draw_open_set();
 };
 #endif

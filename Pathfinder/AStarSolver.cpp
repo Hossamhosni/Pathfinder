@@ -1,4 +1,5 @@
 #include "AStarSolver.h"
+#define WIN_SIZE 600
 AStarSolver::AStarSolver(vector<vector<Cell*>> grid) {
 	this->grid = grid;
 
@@ -21,10 +22,10 @@ void AStarSolver::setup() {
 			cell->i = row;
 			cell->j = col;
 			cell->obstacle = false;
-			cell->sfrect.setSize(sf::Vector2f(40, 40));
+			cell->sfrect.setSize(sf::Vector2f(WIN_SIZE/SIZE, WIN_SIZE/SIZE));
 			cell->sfrect.setOutlineThickness(1);
 			cell->sfrect.setOutlineColor(sf::Color::Magenta);
-			cell->sfrect.setPosition(row * 40, col * 40);
+			cell->sfrect.setPosition(row * WIN_SIZE / SIZE, col * WIN_SIZE / SIZE);
 		}
 	}
 
@@ -70,13 +71,16 @@ void AStarSolver::solve() {
 	start = this->grid[0][0];
 	openSet.push_back(start); // Push the start node to the open set
 	while (this->openSet.size() > 0) {
-		sort(openSet.begin(), openSet.end());
-		draw_open_set();
-		Cell *current = *(openSet.begin());
+		int min = 100000;
+		
+		for (auto i = openSet.begin(); i != openSet.end(); i++) {
+			if ((*i)->f < min) {
+				min = i - openSet.begin();
+			}
+		}
+		Cell *current = openSet[min];
 		if (current == end) {
 			reconstruct_path(current);
-			print_grid('g');
-			print_grid('f');
 			return;
 		}
 
@@ -163,11 +167,4 @@ void AStarSolver::clear_grid() {
 		}
 	}
 	setup();
-}
-
-void AStarSolver::draw_open_set() {
-	for (auto i = openSet.begin(); i != openSet.end(); i++) {
-		cout << "I = " << (*i)->i << " J = " << (*i)->j << "   ";
-	}
-	cout << endl;
 }
