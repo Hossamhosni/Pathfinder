@@ -18,19 +18,20 @@ void AStarSolver::setup() {
 			Cell* cell = *j;
 			cell->f = 100000;
 			cell->g = 100000;
-			cell->h = calc_huristic(make_pair(row, col), make_pair(SIZE - 1, SIZE - 1));
+			cell->h = calc_huristic(make_pair(row, col), make_pair(SIZE - 1, SIZE-1));
 			cell->i = row;
 			cell->j = col;
+			cell->visited = false;
 			cell->obstacle = false;
 			cell->sfrect.setSize(sf::Vector2f(WIN_SIZE/SIZE, WIN_SIZE/SIZE));
-			cell->sfrect.setOutlineThickness(0);
+			cell->sfrect.setOutlineThickness(1);
 			cell->sfrect.setOutlineColor(sf::Color::Color(33, 33, 33));
 			cell->sfrect.setPosition(row * WIN_SIZE / SIZE, col * WIN_SIZE / SIZE);
 		}
 	}
 
 	this->start = this->grid[0][0];
-	this->end = this->grid[SIZE - 1][SIZE - 1];
+	this->end = this->grid[SIZE - 1][SIZE-1];
 	start->f = start->h;
 	start->g = 0;
 
@@ -61,7 +62,8 @@ void AStarSolver::print_grid(char s) {
 }
 
 int AStarSolver::calc_huristic(pair<int, int> start, pair<int, int> end) {
-	return sqrt(pow(start.first - end.first, 2) + pow(start.second - end.second, 2)); // calculate the eucledian distance as huristic
+	//return sqrt(pow(start.first - end.first, 2) + pow(start.second - end.second, 2)); // calculate the eucledian distance as huristic
+	return abs(start.first - end.first) + abs(start.second - end.second);
 }
 
 void AStarSolver::solve() {
@@ -71,14 +73,16 @@ void AStarSolver::solve() {
 	start = this->grid[0][0];
 	openSet.push_back(start); // Push the start node to the open set
 	while (this->openSet.size() > 0) {
-		int min = 100000;
-		
+		int minF = 100000;
+		int min = 0;
 		for (auto i = openSet.begin(); i != openSet.end(); i++) {
-			if ((*i)->f < min) {
+			if ((*i)->f < minF) {
+				minF = (*i)->f;
 				min = i - openSet.begin();
 			}
 		}
 		Cell *current = openSet[min];
+		current->visited = true;
 		if (current == end) {
 			reconstruct_path(current);
 			return;
@@ -87,6 +91,7 @@ void AStarSolver::solve() {
 		for (auto neighbor = current->neighbors.begin(); neighbor != current->neighbors.end(); neighbor++) {
 			int score = current->g + 1; // 1 is the distance between each cell and neigbors by default
 			Cell* n = *neighbor;
+			n->sfrect.setFillColor(sf::Color::Red);
 			if (score < n->g) {
 				came_from[n] = current;
 				n->g = score;
@@ -100,7 +105,11 @@ void AStarSolver::solve() {
 				}
 			}
 		}
-		openSet.erase(openSet.begin());
+		/*cout << "F:" << endl;
+		print_grid('f');
+		cout << "G:" << endl;
+		print_grid('g');*/
+		openSet.erase(openSet.begin() + min);
 	}
 	
 	cout << "NO SOLUTION" << endl;

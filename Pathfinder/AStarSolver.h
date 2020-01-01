@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 #include <SFML/Graphics.hpp>
-#define SIZE 30
+#define SIZE 15
 using std::vector;
 using std::pair;
 using std::map;
@@ -17,6 +17,7 @@ struct Cell {
 	vector<Cell*> neighbors;
 	bool obstacle;
 	sf::RectangleShape sfrect;
+	bool visited;
 
 	bool operator < (const Cell& cell) const
 	{
