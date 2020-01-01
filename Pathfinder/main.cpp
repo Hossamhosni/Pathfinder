@@ -12,16 +12,17 @@
 using namespace std;
 
 int main() {
+	
 	vector<vector<Cell*>> grid(SIZE);
 	AStarSolver solver(grid);
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Maze");
 	solver.setup();
+	sf::Clock clock;
 	while (window.isOpen())
 	{
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			bool acceptevents = true;
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -32,16 +33,15 @@ int main() {
 				if (x >= 0 && y >= 0 && x < SIZE && y < SIZE)
 					solver.make_cell_wall(y, x);
 			}
-			if (event.type == sf::Event::KeyPressed && acceptevents) {
+			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Enter) {
-					acceptevents = false;
 					solver.solve();
 				}
 				else if (event.key.code == sf::Keyboard::Escape) {
 					solver.clear_grid();
-					acceptevents = true;
 				}
 			}
+			clock.restart();
 		}
 
 		window.clear();

@@ -23,7 +23,7 @@ void AStarSolver::setup() {
 			cell->j = col;
 			cell->obstacle = false;
 			cell->sfrect.setSize(sf::Vector2f(WIN_SIZE/SIZE, WIN_SIZE/SIZE));
-			cell->sfrect.setOutlineThickness(1);
+			cell->sfrect.setOutlineThickness(0);
 			cell->sfrect.setOutlineColor(sf::Color::Color(33, 33, 33));
 			cell->sfrect.setPosition(row * WIN_SIZE / SIZE, col * WIN_SIZE / SIZE);
 		}
@@ -60,13 +60,13 @@ void AStarSolver::print_grid(char s) {
 	cout << endl;
 }
 
-
 int AStarSolver::calc_huristic(pair<int, int> start, pair<int, int> end) {
 	return sqrt(pow(start.first - end.first, 2) + pow(start.second - end.second, 2)); // calculate the eucledian distance as huristic
 }
 
 void AStarSolver::solve() {
 	openSet.clear();
+	reset_cells_values();
 	get_cells_neighbors();
 	start = this->grid[0][0];
 	openSet.push_back(start); // Push the start node to the open set
@@ -101,11 +101,11 @@ void AStarSolver::solve() {
 			}
 		}
 		openSet.erase(openSet.begin());
-
 	}
 	
 	cout << "NO SOLUTION" << endl;
 }
+
 void AStarSolver::get_cells_neighbors() {
 	for (auto i = grid.begin(); i != grid.end(); i++) {
 		for (auto j = i->begin(); j != i->end(); j++) {
@@ -128,6 +128,7 @@ void AStarSolver::get_cells_neighbors() {
 		}
 	}
 }
+
 void AStarSolver::reconstruct_path(Cell* current) {
 	path = { current };
 	while (current != start) {
@@ -139,13 +140,10 @@ void AStarSolver::reconstruct_path(Cell* current) {
 }
 
 void AStarSolver::print_path() {
-	cout << "The Path is \n";
 	for (auto i = path.begin(); i != path.end(); i++) {
-		cout << "(" << (*i)->i << ", " << (*i)->j <<" H = " << (*i)->h << " - F = " << (*i)->f << ")" << endl;
 		(*i)->sfrect.setFillColor(sf::Color::Color(106, 153, 164));
 	}
 }
-
 
 void AStarSolver::draw_grid(sf::RenderWindow* win) {
 	for (int i = 0; i < SIZE; i++) {
@@ -154,9 +152,11 @@ void AStarSolver::draw_grid(sf::RenderWindow* win) {
 		}
 	}
 }
+
 void AStarSolver::make_cell_wall(int i, int j) {
 	grid[j][i]->obstacle = true;
 	grid[j][i]->sfrect.setFillColor(sf::Color::Black);
+	grid[j][i]->sfrect.setSize(sf::Vector2f(WIN_SIZE/SIZE, WIN_SIZE / SIZE));
 }
 
 void AStarSolver::clear_grid() {
@@ -167,4 +167,21 @@ void AStarSolver::clear_grid() {
 		}
 	}
 	setup();
+}
+
+void AStarSolver::reset_cells_values() {
+	for (auto i = grid.begin(); i != grid.end(); i++) {
+		vector<Cell*> row = *i;
+		for (auto j = i->begin(); j != i->end(); j++) {
+			Cell* cell = *j;
+			cell->f = 100000;
+			cell->g = 100000;
+			if (cell->sfrect.getFillColor() == sf::Color::Color(106, 153, 164)) {
+				cell->sfrect.setFillColor(sf::Color::White);
+			}
+		}
+	}
+	start->f = start->h;
+	start->g = 0;
+
 }

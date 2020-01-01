@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 #include <SFML/Graphics.hpp>
-#define SIZE 50
+#define SIZE 30
 using std::vector;
 using std::pair;
 using std::map;
@@ -34,7 +34,7 @@ private:
 	map<Cell*, Cell*> came_from;
 	Cell* end;
 	Cell* start;
-	void print_path();
+	
 public:
 	AStarSolver(vector<vector<Cell*>>);
 	void solve();
@@ -46,5 +46,7 @@ public:
 	void draw_grid(sf::RenderWindow*);
 	void make_cell_wall(int, int);
 	void clear_grid();
+	void print_path();
+	void reset_cells_values();
 };
 #endif
